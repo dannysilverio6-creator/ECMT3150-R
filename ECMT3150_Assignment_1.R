@@ -1,5 +1,4 @@
 # ECMT3150 Financial Econometrics - Assignment 1
-# Danny Silverio, SID 550671578
 #
 # Q1  TSLA momentum strategies, Jul 2022 - Jun 2026
 # Q2  Australian unemployment rate, ARIMA
