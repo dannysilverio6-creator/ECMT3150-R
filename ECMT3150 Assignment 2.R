@@ -1,14 +1,14 @@
-# =============================================================================
+
 # ECMT3150 Assignment 2 (Semester 2, 2025) -- R script
 # Numerical answers are rounded to 3 decimal places, as required.
-# =============================================================================
+
 
 r3 <- function(x) round(x, 3)
 cat_line <- function(label, x) cat(sprintf("%-55s %s\n", label, format(x, nsmall = 3)))
 
-# =============================================================================
+
 # Question 1: Single-period binomial model for NVDA
-# =============================================================================
+
 S0 <- 100; Su <- 120; Sd <- 80; r <- 0.1; K <- 100
 
 cat("\n=== Question 1 ===\n")
@@ -58,9 +58,9 @@ cat_line("      Time-0 cash inflow:", r3(n_calls * (Cmkt - (D + Delta * S0))))
 #         spreads, borrowing/short-selling constraints and margin requirements,
 #         position/liquidity limits, discrete trading and model risk.
 
-# =============================================================================
+
 # Question 2: AUD/CAD one-period model (r = 0) and diffusion model
-# =============================================================================
+
 cat("\n=== Question 2 ===\n")
 
 # (a) E_Q[S1] = S0  =>  q*S0*u + (1-q)*S0/u = S0  =>  q = 1/(u+1)
@@ -133,10 +133,10 @@ Ydf <- data.frame(
 )
 print(Ydf, row.names = FALSE)
 
-# =============================================================================
+
 # FIGURES (base R only -- no extra packages needed)
 # Each figure is saved as a 300-dpi PNG and a vector PDF in ./figures/
-# =============================================================================
+
 cat("\n=== Figures ===\n")
 
 fig_dir <- "figures"
