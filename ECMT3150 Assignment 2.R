@@ -13,16 +13,19 @@ S0 <- 100; Su <- 120; Sd <- 80; r <- 0.1; K <- 100
 
 cat("\n=== Question 1 ===\n")
 
+
 # (a) Martingale condition: S0 = (1/(1+r)) * [p*Su + (1-p)*Sd]
 #     => p = ((1+r)*S0 - Sd) / (Su - Sd)
 p <- ((1 + r) * S0 - Sd) / (Su - Sd)
 cat_line("(a) Risk-neutral probability p:", r3(p))
 stopifnot(abs(p - 0.75) < 1e-12)
 
+
 # (b) European call price: discounted risk-neutral expectation of payoff
 Cu <- max(Su - K, 0); Cd <- max(Sd - K, 0)
 C0 <- (p * Cu + (1 - p) * Cd) / (1 + r)
 cat_line("(b) Fair call price C0:", r3(C0))
+
 
 # (c) Replicating portfolio: D units of money account (worth 1 at t=0, 1+r at t=1),
 #     Delta shares of NVDA.
@@ -34,6 +37,7 @@ cat_line("(c) Delta (shares of NVDA, + = long):", r3(Delta))
 cat_line("    D (units of money account, - = short/borrow):", r3(D))
 cat_line("    Portfolio cost D + Delta*S0 (should equal C0):", r3(D + Delta * S0))
 stopifnot(abs((D + Delta * S0) - C0) < 1e-10)
+
 
 # (d)(i) Market price of the call is $15 > fair price: call is overpriced.
 #        Strategy: sell n calls, buy replicating portfolio per call, pocket difference.
@@ -54,6 +58,7 @@ cat_line("      Time-1 net payoff if up   (should be 0):", r3(payoff_check(Su)))
 cat_line("      Time-1 net payoff if down (should be 0):", r3(payoff_check(Sd)))
 cat_line("      Time-0 cash inflow:", r3(n_calls * (Cmkt - (D + Delta * S0))))
 
+
 # (d)(ii) Discussion points (see written answer): e.g. transaction costs / bid-ask
 #         spreads, borrowing/short-selling constraints and margin requirements,
 #         position/liquidity limits, discrete trading and model risk.
@@ -62,6 +67,7 @@ cat_line("      Time-0 cash inflow:", r3(n_calls * (Cmkt - (D + Delta * S0))))
 # Question 2: AUD/CAD one-period model (r = 0) and diffusion model
 
 cat("\n=== Question 2 ===\n")
+
 
 # (a) E_Q[S1] = S0  =>  q*S0*u + (1-q)*S0/u = S0  =>  q = 1/(u+1)
 q_fun <- function(u) 1 / (u + 1)
@@ -72,8 +78,10 @@ for (u in c(1.05, 1.2, 1.5)) {
   cat(sprintf("(a) u = %.2f: q = %.3f, E_Q[S1] = %.3f\n", u, q_fun(u), Eq))
 }
 
+
 # (b) ATM call on AUD/CAD, S0 = 1, K = 1, r = 0:  payoff (u - 1) w.p. q, else 0
 call_AUDCAD <- function(u) q_fun(u) * (u - 1)          # = (u-1)/(u+1)
+
 
 # (c) ATM call on CAD/AUD, S0 = 1, K = 1: CAD/AUD = 1/S_t.
 #     Up-move of S (prob q)   : 1/S1 = 1/u  -> payoff 0
@@ -95,6 +103,7 @@ tab <- data.frame(
 )
 cat("\n(b)-(c) Prices at selected u (symbolic: (u-1)/(u+1) and u(u-1)/(u+1)):\n")
 print(tab, row.names = FALSE)
+
 
 # (d) Ito's lemma. dS = sigma S dW (zero drift under Q), Y = f(S) = S^{-1}
 #     f' = -S^{-2}, f'' = 2 S^{-3}, no explicit time dependence:
@@ -119,6 +128,7 @@ Yt <- 1 / St
 cat_line("    MC  E[Y(T)] (sigma = 0.2, T = 1):", r3(mean(Yt)))
 cat_line("    Theory exp(sigma^2 T):", r3(exp(sigma^2 * Tt)))
 cat_line("    MC  E[S(T)] (should be 1, martingale):", r3(mean(St)))
+
 
 # (e) Flash crash: S(t) -> 0  =>  Y = 1/S -> infinity.
 #     Drift = sigma^2 * Y(t) -> +inf; absolute volatility = sigma * Y(t) -> +inf
@@ -155,6 +165,7 @@ save_fig <- function(name, plot_fun, width = 9, height = 5.5) {
   cat("  saved:", file.path(fig_dir, name), "(.png/.pdf)\n")
 }
 
+
 # ---- Figure 1: Q1 binomial tree ----------------------------------------------
 fig_tree <- function() {
   par(mar = c(1, 1, 3, 1))
@@ -176,6 +187,7 @@ fig_tree <- function() {
     Delta, D, r), cex = 0.9)
 }
 save_fig("fig1_binomial_tree", fig_tree, 9, 5.5)
+
 
 # ---- Figure 2: Q1 replication payoff ------------------------------------------
 fig_replication <- function() {
@@ -201,6 +213,7 @@ fig_replication <- function() {
 }
 save_fig("fig2_replication_payoff", fig_replication, 9, 5.5)
 
+
 # ---- Figure 3: Q1(d)(i) arbitrage cash flows per call -------------------------
 fig_arbitrage <- function() {
   par(mar = c(4.5, 5, 3, 1))
@@ -221,6 +234,7 @@ fig_arbitrage <- function() {
         side = 3, line = 0, cex = 0.9)
 }
 save_fig("fig3_arbitrage_cashflows", fig_arbitrage, 9, 5.5)
+
 
 # ---- Figure 4: Q2(a)-(c) probabilities and option prices vs u ------------------
 fig_q2_prices <- function() {
@@ -243,6 +257,7 @@ fig_q2_prices <- function() {
          legend = c("AUD/CAD: (u-1)/(u+1)", "CAD/AUD: u(u-1)/(u+1)"))
 }
 save_fig("fig4_q2_prices", fig_q2_prices, 10, 5)
+
 
 # ---- Figure 5: Q2(d) simulated paths of S and Y = 1/S --------------------------
 set.seed(3150)
@@ -275,6 +290,7 @@ fig_paths <- function() {
                     expression("Theory: " * exp(sigma^2 * t))))
 }
 save_fig("fig5_q2d_sample_paths", fig_paths, 11, 5.2)
+
 
 # ---- Figure 6: Q2(e) flash crash and the behaviour of Y ------------------------
 set.seed(1)
